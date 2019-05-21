@@ -2,7 +2,7 @@
  * @Author: leo 
  * @Date: 2019-05-19 15:12:43 
  * @Last Modified by: leo
- * @Last Modified time: 2019-05-19 16:22:52
+ * @Last Modified time: 2019-05-20 09:44:05
  * canvas to circle
  */
 
@@ -25,7 +25,12 @@ let balls = []
 
 // 先绘制一个测试的区域
 context.fillStyle='#E0FFFF'; // 随便找的一个颜色
-context.fillRect(100, 100, 100, 100);
+// context.font='50px';
+context.font = 'bold 100px "Georgia"';
+context.textAlign = 'left';
+context.textBaseline = 'middle';
+context.fillText('WYH', 100, 100, 100);
+
 
 /**
  * 将指定区域的canvas内容图案变成小球
@@ -47,6 +52,7 @@ function canvas2circle(radius = 1) {
       const point2Index = ((j-1)*width + i)*4
       const point3Index = (j*width + i - 1)*4
       const point4Index = (j*width + i)*4
+
       // 计算这四个点的平均color值
       const bg = `rgba(${(data[point1Index] + data[point2Index] + data[point3Index] + data[point4Index])/4}, ${(data[point1Index + 1] + data[point2Index + 1] + data[point3Index + 1] + data[point4Index + 1])/4}, ${(data[point1Index + 2] + data[point2Index + 2] + data[point3Index + 2] + data[point4Index + 2])/4}, ${(data[point1Index + 3] + data[point2Index + 3] + data[point3Index + 3] + data[point4Index + 3])/4})`
       createBall(i, j, radius, bg)
@@ -82,11 +88,9 @@ function render() {
 }
 
 function start() {
-  canvas2circle(50)
-  setTimeout(() => {
-    initCanvas()
-    render()
-  }, 1000)
+  canvas2circle(1)
+  initCanvas()
+  render()
 }
 
 start()

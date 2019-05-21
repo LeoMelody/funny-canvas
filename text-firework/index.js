@@ -51,20 +51,23 @@ var pixis = function() {
   console.log(p)
   var pt = 0;
 
-  // for (var i = 0; i < h; i += 1) {
-  //   for (var j = 0; j < w; j += 1) {
-  //     var r = p.data[pt];
-
-  //     if (r !== 0) {
-  //       var e = p.data[pt + 1];
-  //       var b = p.data[pt + 2];
-  //       var a = p.data[pt + 3];
-  //       var _px = new _Px(j, i, r, e, b, a);
-  //       arr.push(_px);
-  //     };
-  //     pt += 4;
-  //   };
-  // };
+  // 这个相当于
+  for (var i = 0; i < h; i += 1) {
+    for (var j = 0; j < w; j += 1) {
+      // 获取r
+      var r = p.data[pt];
+      
+      // 如果r不为 0 将像素点数据 push 到 像素数组中
+      if (r !== 0) {
+        var e = p.data[pt + 1];
+        var b = p.data[pt + 2];
+        var a = p.data[pt + 3];
+        var _px = new _Px(j, i, r, e, b, a);
+        arr.push(_px);
+      };
+      pt += 4;
+    };
+  };
 };
 
 // var save = function() {
