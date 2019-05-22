@@ -1,35 +1,26 @@
-// 声明canvas和ctx
-var c = document.getElementById('canvas');
+var c = document.getElementById('canv');
 var $ = c.getContext('2d');
-const context = c.getContext('2d')
 
-// 定义（缓存）canvas宽高以及window内屏宽高
-let w = c.width = window.innerWidth;
-let h = c.height = window.innerHeight;
+var w = c.width = window.innerWidth;
+var h = c.height = window.innerHeight;
 
-// 制作黑底画布
-$.fillStyle = 'rgba(123,123,123,.5)';
-$.fillRect(0, 0, w, h);
+    $.fillStyle = 'hsla(0,0%,0%,1)';
+    $.fillRect(0, 0, w, h);
 
-// 这两个暂时不是特别清晰
 var u = 0;
 var arr = [];
 
-// init w,h ?
-// w = h = undefined
+var w;
+var h;
 
-// 这都是一些参数
 var str;
-var strs = ['Animationxxxxxxxx'];
+var strs = ['wyh'];
 
 var _off = 150;
-var _spr = 0.4;
+var _spr = 0.3;
 
 var ms;
 
-/**
- * 生成文字
- */
 var txt = function() {
   str = strs[Math.floor(Math.random() * strs.length)];
   for (var i in strs) {
@@ -38,26 +29,17 @@ var txt = function() {
   $.font = 'bold 100px "Georgia"';
   $.textAlign = 'left';
   $.textBaseline = 'middle';
-  // measureText方法，用于量值字符串的宽度
-  // 那下面这个方法就很有意思了。通过量值字符串所占用的宽度，再去通过计算将其居中处理
-  // 为什么不直接在整个画布上进行居中处理呢？
   $.fillText(str, (w - $.measureText(str).width) * 0.5, h * 0.5);
 };
 
-// 实现文字 --> 小球 的核心方法
 var pixis = function() {
-  // getImageData还隐藏了哪些信息呢？
-  var p = $.getImageData(100, 100, 100, 100);
-  console.log(p)
+  var p = $.getImageData(0, 0, w, h);
   var pt = 0;
 
-  // 这个相当于
   for (var i = 0; i < h; i += 1) {
     for (var j = 0; j < w; j += 1) {
-      // 获取r
       var r = p.data[pt];
-      
-      // 如果r不为 0 将像素点数据 push 到 像素数组中
+
       if (r !== 0) {
         var e = p.data[pt + 1];
         var b = p.data[pt + 2];
@@ -70,164 +52,154 @@ var pixis = function() {
   };
 };
 
-// var save = function() {
-//   $.fillStyle = 'hsla(0,0%,0%,1)';
-//   $.fillRect(0, 0, w, h);
-// };
+var save = function() {
+  $.fillStyle = 'hsla(0,0%,0%,1)';
+  $.fillRect(0, 0, w, h);
+};
 
-// var msPos = function() {
-//   for (var i in arr) {
-//     u -= .5;
-//     if (!ms) return;
+var msPos = function() {
+  for (var i in arr) {
+    u -= .5;
+    if (!ms) return;
 
-//     var _px = arr[i];
+    var _px = arr[i];
 
-//     var dx = _px.x - ms.x;
-//     var dy = _px.y - ms.y;
+    var dx = _px.x - ms.x;
+    var dy = _px.y - ms.y;
 
-//     var d = Math.sqrt(dx * dx + dy * dy);
-//     var minD = _px.w + _off;
+    var d = Math.sqrt(dx * dx + dy * dy);
+    var minD = _px.w + _off;
 
-//     if (d < minD) {
-//       var ang = Math.atan2(dy, dx);
+    if (d < minD) {
+      var ang = Math.atan2(dy, dx);
 
-//       var tx = ms.x + Math.cos(ang) * minD;
-//       var ty = ms.y + Math.sin(ang) * minD;
+      var tx = ms.x + Math.cos(ang) * minD;
+      var ty = ms.y + Math.sin(ang) * minD;
 
-//       var ax = (tx - _px.x) * _spr;
-//       var ay = (ty - _px.y) * _spr;
+      var ax = (tx - _px.x) * _spr;
+      var ay = (ty - _px.y) * _spr;
 
-//       _px.vx += ax;
-//       _px.vy += ay;
-//     };
-//   };
-// };
+      _px.vx += ax;
+      _px.vy += ay;
+    };
+  };
+};
 
-// var txtPos = function() {
-//   if (arr.length === 0) {
+var txtPos = function() {
+  if (arr.length === 0) {
 
-//     delete arr[0];
-//     arr.splice(0);
-//     str = strs[Math.floor(Math.random() * strs.length)];
-//     go();
-//   } else {
-//     for (var i = 0; i < arr.length; i++) {
-//       var _px = arr[i];
-//       if (_px.y > h) {
-//         delete arr[i];
-//         arr.splice(i, 1);
-//       } else {
-//         break;
-//       };
-//     };
-//   };
-// };
+    delete arr[0]; 
+    arr.splice(0);
+    str = strs[Math.floor(Math.random() * strs.length)];
+    go();
+  } else {
+    for (var i = 0; i < arr.length; i++) {
+      var _px = arr[i];
+      if (_px.y > h) {
+        delete arr[i];
+        arr.splice(i, 1);
+      } else {
+        break;
+      };
+    };
+  };
+};
 
-// var fall = function() {
-//   for (var i = 0; i < arr.length; i++) {
-//     if (i % 6 === 0) {
-//       delete arr[i];
-//       arr.splice(i, 1);
-//     } else {
-//       var _px = arr[i];
-//       _px.draw();
-//       _px.move();
-//     };
-//   };
-// };
+var fall = function() {
+  for (var i = 0; i < arr.length; i++) {
+    if (i % 6 === 0) {
+      delete arr[i];
+      arr.splice(i, 1);
+    } else {
+      var _px = arr[i];
+      _px.draw();
+      _px.move();
+    };
+  };
+};
 
-// var upd = function() {
-//   save();
-//   msPos();
-//   txtPos();
-//   fall();
-// };
+var upd = function() {
+  save();
+  // msPos();
+  txtPos();
+  // fall();
+};
 
-// var _Px = function(x, y) {
-//   this.w = 1;
-//   this.h = 1;
-//   this.x = x;
-//   this.y = y;
-//   this.vx = Math.random() * 5 - 2.5;
-//   this.vy = Math.random() * 5 - 2;
-//   this.color = 'hsla(' + u + ', 95%, 50%, 1)';
-// };
+var _Px = function(x, y) {
+  this.w = 1;
+  this.h = 1;
+  this.x = x;
+  this.y = y;
+  this.vx = Math.random() * 5 - 2.5;
+  this.vy = Math.random() * 5 - 2;
+  this.color = 'hsla(' + u + ', 95%, 50%, 1)';
+};
 
-// _Px.prototype = {
-//   move: function() {
-//     this.vx *= Math.random() * (1 - 0.8) + 0.4;
-//     this.vy *= Math.random() * (1 - 0.8) + 0.7;
-//     this.vy += Math.random() * 2;
-//     this.x += this.vx;
-//     this.y += this.vy;
-//   },
+_Px.prototype = {
+  move: function() {
+    this.vx *= Math.random() * (1 - 0.8) + 0.4;
+    this.vy *= Math.random() * (1 - 0.8) + 0.7;
+    this.vy += Math.random() * 2;
+    this.x += this.vx;
+    this.y += this.vy;
+  },
 
-//   draw: function() {
-//     $.fillStyle = this.color;
-//     $.fillRect(this.x, this.y, this.w, this.h);
-//   }
-// };
+  draw: function() {
+    $.fillStyle = this.color;
+    $.fillRect(this.x, this.y, this.w, this.h);
+  }
+};
 
-// var go = function() {
-//   txt();
-//   pixis();
-// };
+var go = function() {
+  txt();
+  pixis();
+};
 
-// window.requestAnimFrame = (function() {
-//   return window.requestAnimationFrame ||
-//     window.webkitRequestAnimationFrame ||
-//     window.mozRequestAnimationFrame ||
-//     window.oRequestAnimationFrame ||
-//     window.msRequestAnimationFrame ||
-//     function(callback) {
-//       window.setTimeout(callback, 1000 / 60);
-//     };
-// })();
+window.requestAnimFrame = (function() {
+  return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function(callback) {
+      window.setTimeout(callback, 1000 / 60);
+    };
+})();
 
-// var run = function() {
-//   window.requestAnimFrame(run);
-//   upd();
-// }
-
-// window.addEventListener('resize', function(){
-//    c.width = w = window.innerWidth;
-//    c.height = h = window.innerHeight;
-// }, false);
-
-// window.addEventListener('mousemove', function(e) {
-//   ms = {};
-//   if (e) {
-//     ms.x = e.pageX;
-//     ms.y = e.pageY;
-//   } else {
-//     ms.x = e.x + document.body.scrollLeft;
-//     ms.y = e.y + document.body.scrollTop;
-//   };
-//   return ms;
-// }, false);
-
-// window.addEventListener('touchmove', function(e) {
-//   ms = {};
-//   if (e) {
-//     ms.x = e.touches[0].pageX;
-//     ms.y = e.touches[0].pageY;
-//   } else {
-//     ms.x = e.touches[0].x + document.body.scrollLeft;
-//     ms.y = e.touches[0].y + document.body.scrollTop;
-//     e.preventDefault();
-//   };
-//   return ms;
-// }, false);
-
-// go();
-// run();
-function createCircle() {
-  context.beginPath();
-  context.fillStyle='rgb(40,25,116)'; 
-  context.arc(100, 100, 1, Math.PI / 180 * 0, Math.PI / 180 * 360);
-  context.fill();  
+var run = function() {
+  window.requestAnimFrame(run);
+  upd();
 }
 
-createCircle()
+window.addEventListener('resize', function(){
+   c.width = w = window.innerWidth;
+   c.height = h = window.innerHeight;
+}, false);
 
-let imgData = context.getImageData(99, 99, 2, 2)
+window.addEventListener('mousemove', function(e) {
+  ms = {};
+  if (e) {
+    ms.x = e.pageX;
+    ms.y = e.pageY;
+  } else {
+    ms.x = e.x + document.body.scrollLeft;
+    ms.y = e.y + document.body.scrollTop;
+  };
+  return ms;
+}, false);
+
+window.addEventListener('touchmove', function(e) {
+  ms = {};
+  if (e) {
+    ms.x = e.touches[0].pageX;
+    ms.y = e.touches[0].pageY;
+  } else {
+    ms.x = e.touches[0].x + document.body.scrollLeft;
+    ms.y = e.touches[0].y + document.body.scrollTop;
+    e.preventDefault();
+  };
+  return ms;
+}, false);
+
+go();
+run();
